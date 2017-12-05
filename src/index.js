@@ -1,1 +1,1 @@
-require('./app.scss')
+require('app.scss')
