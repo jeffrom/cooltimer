@@ -7,9 +7,8 @@ const PLACEHOLDER_STEP = {
 }
 
 class Runner {
-  constructor({ phases, onRunFinished, onTick, onComplete }) {
+  constructor({ phases, onTick, onComplete }) {
     this.phases = phases
-    this.onRunFinished = onRunFinished || function noop() {}
 
     this.timer = new Timer({
       onTick: onTick,
@@ -44,7 +43,6 @@ class Runner {
     this.finished = true
     this.timer.pause()
     this.timer.reset()
-    this.onRunFinished()
   }
 
   next() {
@@ -76,10 +74,9 @@ class Runner {
 }
 
 export class RunnerView {
-  constructor(phases, onRunFinished) {
+  constructor(phases) {
     this.runner = new Runner({
       phases,
-      onRunFinished,
       onTick: this.onTick.bind(this),
       onComplete: this.onComplete.bind(this),
     })
@@ -96,11 +93,12 @@ export class RunnerView {
   }
 
   view() {
+    console.log('RunnierView.view()', this)
     let inner
     const runner = this.runner
 
-    if (this.finished) {
-      inner = [m('.finished', { onclick: runner.onRunFinished }, 'DONE!!!')]
+    if (runner.finished) {
+      inner = [m('.finished', 'DONE!!!')]
     } else {
       inner = [
         m('.runner-label', runner.step.label),
@@ -108,7 +106,6 @@ export class RunnerView {
         m('.runner-controls', [
           m('button.pause-button', { onclick: () => runner.pause() }, 'pause'),
           m('button.play-button', { onclick: () => runner.start() }, 'play'),
-          m('button.stop-button', { onclick: () => runner.stop() }, 'stop'),
           m('button.next-button', { onclick: () => runner.next() }, 'next'),
         ]),
       ]
