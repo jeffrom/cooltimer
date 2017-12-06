@@ -25,11 +25,13 @@ class Runner {
     this.repeats = 0
     this.step = PLACEHOLDER_STEP
     this.finished = false
+    this.nextup = null
   }
 
   start() {
     if (this.step === PLACEHOLDER_STEP) {
       this.step = this.phases[0].phase.steps[0]
+      this.nextup = this.peek()
     }
     this.timer.start(this.step.time)
   }
@@ -46,6 +48,26 @@ class Runner {
     this.finished = true
     this.timer.pause()
     this.timer.reset()
+  }
+
+  peek() {
+    const phase = this.phases[this.phaseIdx].phase
+    let nextStep = this.stepIdx + 1
+    let nextPhase = this.phaseIdx
+    let repeats = this.repeats
+
+    if (nextStep > phase.steps.length - 1) {
+      if (++repeats > (phase.repeats || 0)) {
+        nextPhase++
+        repeats = 0
+      }
+      nextStep = 0
+    }
+    if (nextPhase > this.phases.length - 1) {
+      return { label: 'DONE!' }
+    }
+
+    return this.phases[nextPhase].phase.steps[nextStep]
   }
 
   next() {
@@ -70,6 +92,7 @@ class Runner {
     this.step = this.phases[this.phaseIdx].phase.steps[this.stepIdx]
     this.timer.start(this.step.time)
 
+    this.nextup = this.peek()
     return this.step
   }
 }
@@ -136,6 +159,11 @@ export class RunnerView {
       ]
     }
 
+    const nextupTime = runner.nextup.time ? `${runner.nextup.time}s` : ''
+    const nextupLabel = runner.nextup.label
+      ? `next: ${runner.nextup.label} ${nextupTime}`
+      : ''
+
     return m('section.runner.hero.is-dark.is-fullheight', [
       m('.hero-head', [
         m('.container', [m('h1.runner-progress.title', 'sup sup')]),
@@ -143,7 +171,11 @@ export class RunnerView {
       m('.hero-body', [m('.container.has-text-centered', inner)]),
       m('.hero-foot', [
         m('.container', [
-          m('h1.runner-nextup.title.is-pulled-right', 'sup sup'),
+          m(
+            'h1.runner-nextup.title.is-pulled-right',
+            { onclick: () => runner.next() },
+            nextupLabel
+          ),
         ]),
       ]),
     ])

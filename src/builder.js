@@ -88,7 +88,7 @@ class PhaseView {
 
     return m('section.phase.hero.is-dark', [
       m('.container.is-fluid', [
-        m('span.phase-label.title', phase.label),
+        m('span.phase-label.subtitle', phase.phase.label),
         m('span', ' '),
         m('span.repeats', phase.numRepeats()),
         m('span', ' x '),
@@ -122,9 +122,10 @@ export class BuilderView {
       m('.step-controls', []),
       m('.phase-info.hero.is-dark', [
         m('.container.is-fluid', [
-          m('.h1.timer-name.title'),
+          m('span.timer-name.title', this.builder.name),
+          m('span', ' '),
           m(
-            'h2.phase-steps.subtitle',
+            'span.phase-steps.subtitle',
             prettySeconds(this.builder.totalDuration())
           ),
         ]),
