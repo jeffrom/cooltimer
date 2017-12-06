@@ -87,7 +87,7 @@ export class RunnerView {
   onTick() {
     const remaining = this.runner.timer.remaining()
 
-    if (remaining < 3) {
+    if (remaining <= 3) {
       beep()
     }
     m.redraw()

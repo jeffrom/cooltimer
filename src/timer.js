@@ -23,7 +23,7 @@ export class Timer {
 
   tick() {
     // console.log('tick')
-    if (++this.curr > this.duration) {
+    if (++this.curr >= this.duration) {
       console.log('timer completed')
       this.onComplete()
     } else {
