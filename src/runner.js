@@ -107,7 +107,7 @@ export class RunnerView {
     if (runner.finished) {
       inner = [
         m(
-          'h1.finished.yuge.title',
+          'h1.finished.title.is-size-1',
           {
             onclick: () => {
               runner.stop()
@@ -120,8 +120,8 @@ export class RunnerView {
       const btnType = runner.timer.isPaused() ? 'play' : 'pause'
 
       inner = [
-        m('h1.runner-label.title.yuge', runner.step.label),
-        m('h2.runner-timeleft.subtitle.subyuge', runner.timer.remaining()),
+        m('h1.runner-label.title.is-size-1', runner.step.label),
+        m('h2.runner-timeleft.subtitle.is-size-2', runner.timer.remaining()),
         m('.runner-controls', [
           m(
             `button.button.is-dark.is-large.${btnType}-button`,
