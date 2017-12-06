@@ -15,6 +15,7 @@ class App {
   start() {
     console.log('starting')
     this.running = true
+    this.runner.start()
   }
 
   stop() {
@@ -22,7 +23,6 @@ class App {
   }
 
   view() {
-    console.log('view', this.running)
     let inner
 
     if (this.running) {
