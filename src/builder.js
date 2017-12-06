@@ -48,7 +48,10 @@ class StepView {
 
 function prettySeconds(s) {
   if (s > 60) {
-    return `${Math.floor(s / 60)}m${s % 60}s`
+    const minutes = Math.floor(s / 60)
+    const remainingSecs = s % 60
+    const secs = remainingSecs ? `${remainingSecs}s` : ''
+    return `${minutes}m${secs}`
   }
   return `${s}s`
 }
@@ -60,15 +63,19 @@ class PhaseView {
 
   view() {
     const phase = this.phase
-    const totalDuration = phase.steps.reduce((acc, step) => {
-      return acc + step.time
-    }, 0)
+    const totalDuration =
+      (phase.repeats || 1) *
+      phase.steps.reduce((acc, step) => {
+        return acc + step.time
+      }, 0)
 
     return m('section.phase.hero.is-dark', [
       m('.container.is-fluid', [
         m('span.phase-label.title', phase.label),
         m('span', ' '),
-        m('span.phase-num-steps.subtitle', phase.steps.length),
+        m('span.repeats', phase.repeats || 1),
+        m('span', ' x '),
+        m('span.phase-num-steps', phase.steps.length),
         m('span', ' '),
         m('span.duration', prettySeconds(totalDuration)),
         m('.steps', phase.steps.map(step => m(new StepView(step)))),

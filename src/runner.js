@@ -22,6 +22,7 @@ class Runner {
   reset() {
     this.phaseIdx = 0
     this.stepIdx = 0
+    this.repeats = 0
     this.step = PLACEHOLDER_STEP
     this.finished = false
   }
@@ -56,7 +57,9 @@ class Runner {
 
     this.stepIdx++
     if (this.stepIdx > phase.steps.length - 1) {
-      this.phaseIdx++
+      if (++this.repeats > (phase.repeats || 0)) {
+        this.phaseIdx++
+      }
       this.stepIdx = 0
     }
     if (this.phaseIdx > this.phases.length - 1) {
