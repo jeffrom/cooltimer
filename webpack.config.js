@@ -57,6 +57,11 @@ const config = {
         test: /\.css$/,
         use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
+
+      {
+        test: /\.mp3$/,
+        loader: 'file-loader',
+      },
     ],
   },
   resolve: {

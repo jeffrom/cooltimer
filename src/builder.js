@@ -12,6 +12,7 @@ const defaultPhases = [
   // phase 1
   {
     label: 'phase 1',
+    repeats: 3,
     steps: [
       { color: '#6ef442', label: 'Burpee', time: 30 },
       { color: '#f44741', label: 'Rest', time: 10 },
@@ -45,6 +46,13 @@ class Step {
   }
 }
 
+function prettySeconds(s) {
+  if (s > 60) {
+    return `${Math.floor(s / 60)}m${s % 60}s`
+  }
+  return `${s}s`
+}
+
 class Phase {
   constructor(phase) {
     this.phase = phase
@@ -52,10 +60,17 @@ class Phase {
 
   view() {
     const phase = this.phase
+    const totalDuration = phase.steps.reduce((acc, step) => {
+      return acc + step.time
+    }, 0)
 
     return m('section.phase.section', [
       m('.container.is-fluid', [
-        m('h1.phase-label.title', `${phase.label} (${phase.steps.length})`),
+        m('span.phase-label.title', phase.label),
+        m('span', ' '),
+        m('span.phase-num-steps.subtitle', phase.steps.length),
+        m('span', ' '),
+        m('span.duration', prettySeconds(totalDuration)),
         m('.steps', phase.steps.map(step => m(new Step(step)))),
       ]),
     ])

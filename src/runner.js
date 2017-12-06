@@ -1,6 +1,7 @@
 import m from 'mithril'
 
 import { Timer } from 'timer'
+import { beep, beepDone } from 'beep'
 
 const PLACEHOLDER_STEP = {
   time: 0,
@@ -60,7 +61,6 @@ class Runner {
     }
     if (this.phaseIdx > this.phases.length - 1) {
       // ALL DONE
-      this.finished = true
       this.stop()
       return null
     }
@@ -82,11 +82,17 @@ export class RunnerView {
   }
 
   onTick() {
+    const remaining = this.runner.timer.remaining()
+
+    if (remaining < 3) {
+      beep()
+    }
     m.redraw()
   }
 
   onComplete() {
     this.runner.next()
+    beepDone()
 
     m.redraw()
   }
@@ -96,11 +102,19 @@ export class RunnerView {
     const runner = this.runner
 
     if (runner.finished) {
-      inner = [m('h1.title.finished', 'DONE!!!')]
+      inner = [
+        m(
+          'h1.title.finished',
+          {
+            onclick: () => {
+              runner.stop()
+            },
+          },
+          'DONE!!!'
+        ),
+      ]
     } else {
       const btnType = runner.timer.isPaused() ? 'play' : 'pause'
-
-      console.log(btnType)
 
       inner = [
         m('h1.title.runner-label', runner.step.label),
