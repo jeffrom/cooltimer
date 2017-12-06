@@ -2,9 +2,14 @@ import m from 'mithril'
 
 import { BuilderView } from 'builder'
 import { RunnerView } from 'runner'
+import { Keys } from 'keys'
 
 class App {
   constructor() {
+    this.keys = new Keys()
+    this.keys.onSpace = this.onSpace.bind(this)
+    this.keys.onEnter = this.onEnter.bind(this)
+    this.keys.onEsc = this.onEsc.bind(this)
     this.reset()
   }
 
@@ -22,8 +27,29 @@ class App {
     this.runner.runner.start()
   }
 
+  onSpace(event) {
+    event.preventDefault()
+    if (this.running) {
+      this.runner.runner.playPause()
+    } else {
+      this.start()
+    }
+    m.redraw()
+  }
+
+  onEnter() {
+    this.runner.runner.next()
+    m.redraw()
+  }
+
+  onEsc() {
+    if (this.running) {
+      this.reset()
+    }
+    m.redraw()
+  }
+
   view() {
-    // console.log('app.view()', this)
     return m('main', [
       m(this.running ? this.runner : this.builder),
       m('section.app-controls.hero.is-dark', [
