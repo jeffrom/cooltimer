@@ -3,22 +3,22 @@ import m from 'mithril'
 import { BuilderView } from 'builder'
 import { RunnerView } from 'runner'
 
-const root = document.body
-
 class App {
   constructor() {
     this.builder = new BuilderView()
-    this.runner = new RunnerView(this.builder.phases)
+    // this.runner = new RunnerView(this.builder.phases, this.stop.bind(this))
+    this.runner = new RunnerView(this.builder.phases, this.stop.bind(this))
     this.running = false
   }
 
   start() {
     console.log('starting')
     this.running = true
-    this.runner.start()
+    this.runner.runner.start()
   }
 
   stop() {
+    console.log('App.stop()', this)
     this.running = false
   }
 
@@ -37,8 +37,9 @@ class App {
       ]
     }
 
+    console.log('app.view()', this)
     return m('main', inner)
   }
 }
 
-m.mount(root, new App())
+m.mount(document.body, new App())

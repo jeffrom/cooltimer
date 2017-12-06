@@ -6,12 +6,14 @@ const PLACEHOLDER_STEP = {
   time: 0,
 }
 
-export class RunnerView {
-  constructor(phases) {
+class Runner {
+  constructor({ phases, onRunFinished, onTick, onComplete }) {
     this.phases = phases
+    this.onRunFinished = onRunFinished || function noop() {}
+
     this.timer = new Timer({
-      onTick: this.onTick.bind(this),
-      onComplete: this.onComplete.bind(this),
+      onTick: onTick,
+      onComplete: onComplete,
     })
 
     this.reset()
@@ -21,16 +23,7 @@ export class RunnerView {
     this.phaseIdx = 0
     this.stepIdx = 0
     this.step = PLACEHOLDER_STEP
-  }
-
-  onTick() {
-    m.redraw()
-  }
-
-  onComplete() {
-    this.next()
-
-    m.redraw()
+    this.finished = false
   }
 
   start() {
@@ -46,7 +39,13 @@ export class RunnerView {
     this.timer.pause()
   }
 
-  stop() {}
+  stop() {
+    console.log('stop')
+    this.finished = true
+    this.timer.pause()
+    this.timer.reset()
+    this.onRunFinished()
+  }
 
   next() {
     const phase = this.phases[this.phaseIdx]
@@ -54,13 +53,17 @@ export class RunnerView {
     this.timer.pause()
     this.timer.reset()
 
-    if (++this.stepIdx > phase.steps.length - 1) {
+    this.stepIdx++
+    if (this.stepIdx > phase.steps.length - 1) {
+      console.log('switching phases')
       this.phaseIdx++
       this.stepIdx = 0
     }
     if (this.phaseIdx > this.phases.length - 1) {
       // ALL DONE
       console.log('next: done')
+      this.finished = true
+      this.stop()
       return null
     }
 
@@ -70,16 +73,47 @@ export class RunnerView {
     console.log('next', this.step)
     return this.step
   }
+}
+
+export class RunnerView {
+  constructor(phases, onRunFinished) {
+    this.runner = new Runner({
+      phases,
+      onRunFinished,
+      onTick: this.onTick.bind(this),
+      onComplete: this.onComplete.bind(this),
+    })
+  }
+
+  onTick() {
+    m.redraw()
+  }
+
+  onComplete() {
+    this.runner.next()
+
+    m.redraw()
+  }
 
   view() {
-    return m('.runner', [
-      m('.runner-label', this.step.label),
-      m('.runner-timeleft', this.timer.remaining()),
-      m('.runner-controls', [
-        m('button.pause-button', { onclick: this.pause.bind(this) }, 'pause'),
-        m('button.stop-button', { onclick: this.stop.bind(this) }, 'stop'),
-        m('button.next-button', { onclick: this.next.bind(this) }, 'next'),
-      ]),
-    ])
+    let inner
+    const runner = this.runner
+
+    if (this.finished) {
+      inner = [m('.finished', { onclick: runner.onRunFinished }, 'DONE!!!')]
+    } else {
+      inner = [
+        m('.runner-label', runner.step.label),
+        m('.runner-timeleft', runner.timer.remaining()),
+        m('.runner-controls', [
+          m('button.pause-button', { onclick: () => runner.pause() }, 'pause'),
+          m('button.play-button', { onclick: () => runner.start() }, 'play'),
+          m('button.stop-button', { onclick: () => runner.stop() }, 'stop'),
+          m('button.next-button', { onclick: () => runner.next() }, 'next'),
+        ]),
+      ]
+    }
+
+    return m('.runner', inner)
   }
 }
