@@ -17,8 +17,8 @@ export class Timer {
   clearInterval() {
     if (this.t) {
       clearInterval(this.t)
-      this.t = null
     }
+    this.t = null
   }
 
   tick() {
@@ -29,6 +29,10 @@ export class Timer {
     } else {
       this.onTick()
     }
+  }
+
+  isPaused() {
+    return !this.t
   }
 
   pause() {

@@ -26,9 +26,19 @@ class App {
     // console.log('app.view()', this)
     return m('main', [
       m(this.running ? this.runner : this.builder),
-      m('.controls-container', [
-        m('button.start-button', { onclick: this.start.bind(this) }, 'start'),
-        m('button.stop-button', { onclick: this.reset.bind(this) }, 'stop'),
+      m('section.app-controls.section', [
+        m('.container.is-fluid', [
+          m(
+            'button.button.is-large.start-button',
+            { onclick: this.start.bind(this), disabled: this.running },
+            'start'
+          ),
+          m(
+            'button.button.is-large.stop-button',
+            { onclick: this.reset.bind(this) },
+            'stop'
+          ),
+        ]),
       ]),
     ])
   }

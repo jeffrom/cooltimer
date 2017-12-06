@@ -32,8 +32,13 @@ class Runner {
     this.timer.start(this.step.time)
   }
 
-  pause() {
-    this.timer.pause()
+  playPause() {
+    console.log(this.timer.isPaused())
+    if (this.timer.isPaused()) {
+      this.start()
+    } else {
+      this.timer.pause()
+    }
   }
 
   stop() {
@@ -93,13 +98,24 @@ export class RunnerView {
     if (runner.finished) {
       inner = [m('h1.title.finished', 'DONE!!!')]
     } else {
+      const btnType = runner.timer.isPaused() ? 'play' : 'pause'
+
+      console.log(btnType)
+
       inner = [
         m('h1.title.runner-label', runner.step.label),
         m('h2.subtitle.runner-timeleft', runner.timer.remaining()),
         m('.runner-controls', [
-          m('button.pause-button', { onclick: () => runner.pause() }, 'pause'),
-          m('button.play-button', { onclick: () => runner.start() }, 'play'),
-          m('button.next-button', { onclick: () => runner.next() }, 'next'),
+          m(
+            `button.button.is-large.${btnType}-button`,
+            { onclick: () => runner.playPause() },
+            btnType
+          ),
+          m(
+            'button.button.is-large.next-button',
+            { onclick: () => runner.next() },
+            'next'
+          ),
         ]),
       ]
     }

@@ -4,8 +4,8 @@ const defaultPhases = [
   {
     label: 'Warm up',
     steps: [
-      { color: 'yellow', label: 'Jumping Jacks', time: 30 },
-      { color: 'orange', label: 'Boxer shuffle', time: 30 },
+      { color: '#ebf441', label: 'Jumping Jacks', time: 30 },
+      { color: '#f4a641', label: 'Boxer shuffle', time: 30 },
     ],
   },
 
@@ -13,15 +13,54 @@ const defaultPhases = [
   {
     label: 'phase 1',
     steps: [
-      { color: 'green', label: 'Burpee', time: 30 },
-      { color: 'red', label: 'Rest', time: 10 },
-      { color: 'green', label: 'Mountain Climbers', time: 30 },
-      { color: 'red', label: 'Rest', time: 10 },
-      { color: 'green', label: 'Plank', time: 30 },
-      { color: 'red', label: 'Rest', time: 10 },
+      { color: '#6ef442', label: 'Burpee', time: 30 },
+      { color: '#f44741', label: 'Rest', time: 10 },
+      { color: '#6ef442', label: 'Mountain Climbers', time: 30 },
+      { color: '#f44741', label: 'Rest', time: 10 },
+      { color: '#6ef442', label: 'Plank', time: 30 },
+      { color: '#f44741', label: 'Rest', time: 10 },
     ],
   },
 ]
+
+class Step {
+  constructor(step) {
+    this.step = step
+  }
+
+  view() {
+    const step = this.step
+
+    return m(
+      'section.step.section',
+      { style: `background-color:${step.color}` },
+      [
+        m('.container.is-fluid', [
+          m('span.step-interval', step.time),
+          m('span', ' '),
+          m('span.step-label.subtitle', step.label),
+        ]),
+      ]
+    )
+  }
+}
+
+class Phase {
+  constructor(phase) {
+    this.phase = phase
+  }
+
+  view() {
+    const phase = this.phase
+
+    return m('section.phase.section', [
+      m('.container.is-fluid', [
+        m('h1.phase-label.title', `${phase.label} (${phase.steps.length})`),
+        m('.steps', phase.steps.map(step => m(new Step(step)))),
+      ]),
+    ])
+  }
+}
 
 export class BuilderView {
   constructor(phases = defaultPhases) {
@@ -31,23 +70,7 @@ export class BuilderView {
   view() {
     return [
       m('.step-controls', []),
-      m(
-        '.phases',
-        this.phases.map(phase => {
-          return m('.phase', [
-            m('.phase-label', `${phase.label} (${phase.steps.length})`),
-            m(
-              '.steps',
-              phase.steps.map(step => {
-                return m('.step', { style: `background-color:${step.color}` }, [
-                  m('.step-interval', step.time),
-                  m('.step-label', step.label),
-                ])
-              })
-            ),
-          ])
-        })
-      ),
+      m('.phases', this.phases.map(phase => m(new Phase(phase)))),
     ]
   }
 }
