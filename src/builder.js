@@ -1,28 +1,31 @@
 import m from 'mithril'
 
-const defaultPhases = [
-  {
-    label: 'Warm up',
-    steps: [
-      { color: '#ebf441', label: 'Jumping Jacks', time: 30 },
-      { color: '#f4a641', label: 'Boxer shuffle', time: 30 },
-    ],
-  },
+const defaultPhases = {
+  name: 'normal workout',
+  phases: [
+    {
+      label: 'Warm up',
+      steps: [
+        { color: '#ebf441', label: 'Jumping Jacks', time: 30 },
+        { color: '#f4a641', label: 'Boxer shuffle', time: 30 },
+      ],
+    },
 
-  // phase 1
-  {
-    label: 'phase 1',
-    repeats: 3,
-    steps: [
-      { color: '#6ef442', label: 'Burpee', time: 30 },
-      { color: '#f44741', label: 'Rest', time: 10 },
-      { color: '#6ef442', label: 'Mountain Climbers', time: 30 },
-      { color: '#f44741', label: 'Rest', time: 10 },
-      { color: '#6ef442', label: 'Plank', time: 30 },
-      { color: '#f44741', label: 'Rest', time: 10 },
-    ],
-  },
-]
+    // phase 1
+    {
+      label: 'phase 1',
+      repeats: 3,
+      steps: [
+        { color: '#6ef442', label: 'Burpee', time: 30 },
+        { color: '#f44741', label: 'Rest', time: 10 },
+        { color: '#6ef442', label: 'Mountain Climbers', time: 30 },
+        { color: '#f44741', label: 'Rest', time: 10 },
+        { color: '#6ef442', label: 'Plank', time: 30 },
+        { color: '#f44741', label: 'Rest', time: 10 },
+      ],
+    },
+  ],
+}
 
 class StepView {
   constructor(step) {
@@ -32,17 +35,13 @@ class StepView {
   view() {
     const step = this.step
 
-    return m(
-      'section.step.section',
-      // { style: `background-color:${step.color}` },
-      [
-        m('.container.is-fluid', [
-          m('span.step-interval', step.time),
-          m('span', ' '),
-          m('span.step-label.subtitle', step.label),
-        ]),
-      ]
-    )
+    return m('section.step.section', [
+      m('.container.is-fluid', [
+        m('span.step-interval', step.time),
+        m('span', ' '),
+        m('span.step-label.subtitle', step.label),
+      ]),
+    ])
   }
 }
 
@@ -51,9 +50,32 @@ function prettySeconds(s) {
     const minutes = Math.floor(s / 60)
     const remainingSecs = s % 60
     const secs = remainingSecs ? `${remainingSecs}s` : ''
+
     return `${minutes}m${secs}`
   }
   return `${s}s`
+}
+
+class Phase {
+  constructor(phase) {
+    this.phase = phase
+  }
+
+  totalDuration() {
+    const phase = this.phase
+
+    return (
+      this.numRepeats() * phase.steps.reduce((acc, step) => acc + step.time, 0)
+    )
+  }
+
+  numRepeats() {
+    return this.phase.repeats || 1
+  }
+
+  numSteps() {
+    return this.phase.steps.length
+  }
 }
 
 class PhaseView {
@@ -63,36 +85,51 @@ class PhaseView {
 
   view() {
     const phase = this.phase
-    const totalDuration =
-      (phase.repeats || 1) *
-      phase.steps.reduce((acc, step) => {
-        return acc + step.time
-      }, 0)
 
     return m('section.phase.hero.is-dark', [
       m('.container.is-fluid', [
         m('span.phase-label.title', phase.label),
         m('span', ' '),
-        m('span.repeats', phase.repeats || 1),
+        m('span.repeats', phase.numRepeats()),
         m('span', ' x '),
-        m('span.phase-num-steps', phase.steps.length),
+        m('span.phase-num-steps', phase.numSteps()),
         m('span', ' '),
-        m('span.duration', prettySeconds(totalDuration)),
-        m('.steps', phase.steps.map(step => m(new StepView(step)))),
+        m('span.duration', prettySeconds(phase.totalDuration())),
+        m('.steps', phase.phase.steps.map(step => m(new StepView(step)))),
       ]),
     ])
   }
 }
 
+class Builder {
+  constructor(phases) {
+    this.name = phases.name
+    this.phases = phases.phases.map(phase => new Phase(phase))
+  }
+
+  totalDuration() {
+    return this.phases.reduce((acc, phase) => acc + phase.totalDuration(), 0)
+  }
+}
+
 export class BuilderView {
   constructor(phases = defaultPhases) {
-    this.phases = phases
+    this.builder = new Builder(phases)
   }
 
   view() {
     return [
       m('.step-controls', []),
-      m('.phases', this.phases.map(phase => m(new PhaseView(phase)))),
+      m('.phase-info.hero.is-dark', [
+        m('.container.is-fluid', [
+          m('.h1.timer-name.title'),
+          m(
+            'h2.phase-steps.subtitle',
+            prettySeconds(this.builder.totalDuration())
+          ),
+        ]),
+      ]),
+      m('.phases', this.builder.phases.map(phase => m(new PhaseView(phase)))),
     ]
   }
 }

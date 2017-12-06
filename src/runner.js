@@ -29,13 +29,12 @@ class Runner {
 
   start() {
     if (this.step === PLACEHOLDER_STEP) {
-      this.step = this.phases[0].steps[0]
+      this.step = this.phases[0].phase.steps[0]
     }
     this.timer.start(this.step.time)
   }
 
   playPause() {
-    console.log(this.timer.isPaused())
     if (this.timer.isPaused()) {
       this.start()
     } else {
@@ -50,7 +49,7 @@ class Runner {
   }
 
   next() {
-    const phase = this.phases[this.phaseIdx]
+    const phase = this.phases[this.phaseIdx].phase
 
     this.timer.pause()
     this.timer.reset()
@@ -68,7 +67,7 @@ class Runner {
       return null
     }
 
-    this.step = this.phases[this.phaseIdx].steps[this.stepIdx]
+    this.step = this.phases[this.phaseIdx].phase.steps[this.stepIdx]
     this.timer.start(this.step.time)
 
     return this.step

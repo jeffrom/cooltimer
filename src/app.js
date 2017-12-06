@@ -13,7 +13,7 @@ class App {
       this.runner.runner.stop()
     }
     this.builder = new BuilderView()
-    this.runner = new RunnerView(this.builder.phases)
+    this.runner = new RunnerView(this.builder.builder.phases)
     this.running = false
   }
 
@@ -35,7 +35,7 @@ class App {
           ),
           m(
             'button.button.is-large.is-dark.stop-button',
-            { onclick: this.reset.bind(this) },
+            { onclick: this.reset.bind(this), disabled: !this.running },
             'stop'
           ),
         ]),
