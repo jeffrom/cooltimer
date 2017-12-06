@@ -71,6 +71,7 @@ class Runner {
   }
 
   next() {
+    // TODO off by one, one less than we should have
     const phase = this.phases[this.phaseIdx].phase
 
     this.timer.pause()
@@ -78,7 +79,7 @@ class Runner {
 
     this.stepIdx++
     if (this.stepIdx > phase.steps.length - 1) {
-      if (++this.repeats > (phase.repeats || 0)) {
+      if (this.repeats++ > ((phase.repeats && phase.repeats + 1) || 0)) {
         this.phaseIdx++
       }
       this.stepIdx = 0
@@ -128,15 +129,7 @@ export class RunnerView {
 
     if (runner.finished) {
       inner = [
-        m(
-          'h1.finished.title.is-size-1',
-          {
-            onclick: () => {
-              runner.stop()
-            },
-          },
-          'DONE!!!'
-        ),
+        m('h1.finished.title.is-size-1', { onclick: runner.stop }, 'DONE!'),
       ]
     } else {
       const btnType = runner.timer.isPaused() ? 'play' : 'pause'
