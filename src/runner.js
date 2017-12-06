@@ -29,17 +29,14 @@ class Runner {
     if (this.step === PLACEHOLDER_STEP) {
       this.step = this.phases[0].steps[0]
     }
-    console.log('start', this.step)
     this.timer.start(this.step.time)
   }
 
   pause() {
-    console.log('pause')
     this.timer.pause()
   }
 
   stop() {
-    console.log('stop')
     this.finished = true
     this.timer.pause()
     this.timer.reset()
@@ -53,13 +50,11 @@ class Runner {
 
     this.stepIdx++
     if (this.stepIdx > phase.steps.length - 1) {
-      console.log('switching phases')
       this.phaseIdx++
       this.stepIdx = 0
     }
     if (this.phaseIdx > this.phases.length - 1) {
       // ALL DONE
-      console.log('next: done')
       this.finished = true
       this.stop()
       return null
@@ -68,7 +63,6 @@ class Runner {
     this.step = this.phases[this.phaseIdx].steps[this.stepIdx]
     this.timer.start(this.step.time)
 
-    console.log('next', this.step)
     return this.step
   }
 }
@@ -93,16 +87,15 @@ export class RunnerView {
   }
 
   view() {
-    console.log('RunnierView.view()', this)
     let inner
     const runner = this.runner
 
     if (runner.finished) {
-      inner = [m('.finished', 'DONE!!!')]
+      inner = [m('h1.title.finished', 'DONE!!!')]
     } else {
       inner = [
-        m('.runner-label', runner.step.label),
-        m('.runner-timeleft', runner.timer.remaining()),
+        m('h1.title.runner-label', runner.step.label),
+        m('h2.subtitle.runner-timeleft', runner.timer.remaining()),
         m('.runner-controls', [
           m('button.pause-button', { onclick: () => runner.pause() }, 'pause'),
           m('button.play-button', { onclick: () => runner.start() }, 'play'),
@@ -111,6 +104,8 @@ export class RunnerView {
       ]
     }
 
-    return m('.runner', inner)
+    return m('section.runner.hero.is-fullheight', [
+      m('.hero-body', [m('.container.has-text-centered', inner)]),
+    ])
   }
 }

@@ -18,7 +18,6 @@ class App {
   }
 
   start() {
-    console.log('App.start()')
     this.running = true
     this.runner.runner.start()
   }

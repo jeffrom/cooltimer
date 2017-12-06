@@ -1,5 +1,5 @@
 /* global __dirname, require, module*/
-'use strict';
+'use strict'
 
 const webpack = require('webpack')
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
@@ -13,7 +13,11 @@ let plugins = []
 if (env === 'build') {
   plugins.push(new UglifyJsPlugin({ minimize: true }))
 } else {
-  plugins.push(new HtmlWebpackPlugin())
+  plugins.push(
+    new HtmlWebpackPlugin({
+      title: 'Cool Timer',
+    })
+  )
 }
 
 const config = {
@@ -22,7 +26,7 @@ const config = {
   output: {
     path: __dirname + '/build',
     publicPath: '/assets/',
-    filename: "app.js",
+    filename: 'app.js',
   },
   module: {
     rules: [
@@ -33,29 +37,33 @@ const config = {
         options: {
           presets: ['@babel/preset-env'],
           cacheDirectory: true,
-        }
+        },
       },
       {
         test: /(\.jsx|\.js)$/,
         loader: 'eslint-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
 
       {
         test: /\.scss$/,
         use: [
-          {loader: 'style-loader'},
-          {loader: 'css-loader'},
-          {loader: 'sass-loader'},
-        ]
-      }
-    ]
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' },
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+      },
+    ],
   },
   resolve: {
     modules: [path.resolve('./node_modules'), path.resolve('./src')],
-    extensions: ['.json', '.js']
+    extensions: ['.json', '.js'],
   },
-  plugins: plugins
+  plugins: plugins,
 }
 
 module.exports = config

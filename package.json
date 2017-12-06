@@ -7,16 +7,18 @@
     "build": "webpack --env dev && webpack --env build && npm run test",
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require babel-core/register --colors ./src/**/*.spec.js",
-    "test:watch":
-      "mocha --require babel-core/register --colors -w ./src/**/*.spec.js",
-    "start": "npm run build && webpack-dev-server --content-base build/",
+    "test:watch": "mocha --require babel-core/register --colors -w ./src/**/*.spec.js",
+    "start": "webpack-dev-server --content-base build/",
     "clean": "rm -rf build/*"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jeffrom/cooltimer.git"
   },
-  "keywords": ["timer", "browser"],
+  "keywords": [
+    "timer",
+    "browser"
+  ],
   "author": "jeff martin",
   "license": "MIT",
   "bugs": {
@@ -46,7 +48,9 @@
     "yargs": "^10.0.3"
   },
   "dependencies": {
-    "mithril": "^1.1.6"
+    "bulma": "^0.6.1",
+    "mithril": "^1.1.6",
+    "normalize.css": "^7.0.0"
   },
   "prettier": {
     "semi": false,
