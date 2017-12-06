@@ -24,7 +24,7 @@ const defaultPhases = [
   },
 ]
 
-class Step {
+class StepView {
   constructor(step) {
     this.step = step
   }
@@ -34,7 +34,7 @@ class Step {
 
     return m(
       'section.step.section',
-      { style: `background-color:${step.color}` },
+      // { style: `background-color:${step.color}` },
       [
         m('.container.is-fluid', [
           m('span.step-interval', step.time),
@@ -53,7 +53,7 @@ function prettySeconds(s) {
   return `${s}s`
 }
 
-class Phase {
+class PhaseView {
   constructor(phase) {
     this.phase = phase
   }
@@ -64,14 +64,14 @@ class Phase {
       return acc + step.time
     }, 0)
 
-    return m('section.phase.section', [
+    return m('section.phase.hero.is-dark', [
       m('.container.is-fluid', [
         m('span.phase-label.title', phase.label),
         m('span', ' '),
         m('span.phase-num-steps.subtitle', phase.steps.length),
         m('span', ' '),
         m('span.duration', prettySeconds(totalDuration)),
-        m('.steps', phase.steps.map(step => m(new Step(step)))),
+        m('.steps', phase.steps.map(step => m(new StepView(step)))),
       ]),
     ])
   }
@@ -85,7 +85,7 @@ export class BuilderView {
   view() {
     return [
       m('.step-controls', []),
-      m('.phases', this.phases.map(phase => m(new Phase(phase)))),
+      m('.phases', this.phases.map(phase => m(new PhaseView(phase)))),
     ]
   }
 }

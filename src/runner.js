@@ -104,7 +104,7 @@ export class RunnerView {
     if (runner.finished) {
       inner = [
         m(
-          'h1.title.finished',
+          'h1.finished.yuge.title',
           {
             onclick: () => {
               runner.stop()
@@ -117,16 +117,16 @@ export class RunnerView {
       const btnType = runner.timer.isPaused() ? 'play' : 'pause'
 
       inner = [
-        m('h1.title.runner-label', runner.step.label),
-        m('h2.subtitle.runner-timeleft', runner.timer.remaining()),
+        m('h1.runner-label.title.yuge', runner.step.label),
+        m('h2.runner-timeleft.subtitle.subyuge', runner.timer.remaining()),
         m('.runner-controls', [
           m(
-            `button.button.is-large.${btnType}-button`,
+            `button.button.is-dark.is-large.${btnType}-button`,
             { onclick: () => runner.playPause() },
             btnType
           ),
           m(
-            'button.button.is-large.next-button',
+            'button.button.is-dark.is-large.next-button',
             { onclick: () => runner.next() },
             'next'
           ),
@@ -134,8 +134,16 @@ export class RunnerView {
       ]
     }
 
-    return m('section.runner.hero.is-fullheight', [
+    return m('section.runner.hero.is-dark.is-fullheight', [
+      m('.hero-head', [
+        m('.container', [m('h1.runner-progress.title', 'sup sup')]),
+      ]),
       m('.hero-body', [m('.container.has-text-centered', inner)]),
+      m('.hero-foot', [
+        m('.container', [
+          m('h1.runner-nextup.title.is-pulled-right', 'sup sup'),
+        ]),
+      ]),
     ])
   }
 }

@@ -2,3 +2,16 @@
 $section-padding: 20px;
 
 @import '~bulma';
+
+body,
+html {
+  background-color: $grey-darker;
+}
+
+.yuge {
+  font-size: 96px;
+}
+
+.subyuge {
+  font-size: 72px;
+}

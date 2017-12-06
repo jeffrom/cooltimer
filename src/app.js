@@ -26,15 +26,15 @@ class App {
     // console.log('app.view()', this)
     return m('main', [
       m(this.running ? this.runner : this.builder),
-      m('section.app-controls.section', [
+      m('section.app-controls.hero.is-dark', [
         m('.container.is-fluid', [
           m(
-            'button.button.is-large.start-button',
+            'button.button.is-large.is-dark.start-button',
             { onclick: this.start.bind(this), disabled: this.running },
             'start'
           ),
           m(
-            'button.button.is-large.stop-button',
+            'button.button.is-large.is-dark.stop-button',
             { onclick: this.reset.bind(this) },
             'stop'
           ),
