@@ -2,6 +2,7 @@ import m from 'mithril'
 
 import { Timer } from 'timer'
 import { beep, beepDone } from 'beep'
+// import { hexToRGB, invertColor } from 'helpers'
 
 const PLACEHOLDER_STEP = {
   time: 0,
@@ -205,8 +206,17 @@ export class RunnerView {
       : ''
 
     const progressLabel = `${runner.numSteps} / ${runner.totalSteps()}`
+    let containerAttrs = {}
 
-    return m('section.runner.hero.is-dark.is-fullheight', [
+    // if (runner.step.color) {
+    //   const rgb = hexToRGB(runner.step.color)
+    //   const inverted = invertColor(rgb)
+    //   const style = `background:${runner.step.color};color:${inverted};`
+
+    //   containerAttrs = { style: style }
+    // }
+
+    return m('section.runner.hero.is-dark.is-fullheight', containerAttrs, [
       m('.hero-head', [
         m('.container', [
           // progress
