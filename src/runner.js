@@ -22,6 +22,7 @@ class Runner {
   reset() {
     this.phaseIdx = 0
     this.stepIdx = 0
+    this.numSteps = 0
     this.repeats = 0
     this.step = PLACEHOLDER_STEP
     this.finished = false
@@ -80,11 +81,14 @@ class Runner {
 
     this.stepIdx++
     if (this.stepIdx > phase.steps.length - 1) {
-      if (this.repeats++ > ((phase.repeats && phase.repeats + 1) || 0)) {
+      this.repeats++
+      if (this.repeats >= (phase.repeats || 0)) {
         this.phaseIdx++
+        this.repeats = 0
       }
       this.stepIdx = 0
     }
+
     if (this.phaseIdx > this.phases.phases.length - 1) {
       // ALL DONE
       this.stop()
@@ -95,7 +99,22 @@ class Runner {
     this.timer.start(this.step.time)
 
     this.nextup = this.peek()
+    this.numSteps++
     return this.step
+  }
+
+  totalDuration() {
+    return this.phases.phases.reduce(
+      (acc, phase) => acc + phase.totalDuration(),
+      0
+    )
+  }
+
+  totalSteps() {
+    return this.phases.phases.reduce(
+      (acc, phase) => acc + phase.steps.length * (phase.repeats || 1),
+      0
+    )
   }
 }
 
@@ -185,9 +204,14 @@ export class RunnerView {
       ? `next: ${runner.nextup.label} ${nextupTime}`
       : ''
 
+    const progressLabel = `${runner.numSteps} / ${runner.totalSteps()}`
+
     return m('section.runner.hero.is-dark.is-fullheight', [
       m('.hero-head', [
-        m('.container', [m('h1.runner-progress.title', 'sup sup')]),
+        m('.container', [
+          // progress
+          m('h1.runner-progress.title', progressLabel),
+        ]),
       ]),
       m('.hero-body', [m('.container.has-text-centered', inner)]),
       m('.hero-foot', [

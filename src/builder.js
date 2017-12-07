@@ -12,6 +12,14 @@ class Builder {
   totalDuration() {
     return this.phases.reduce((acc, phase) => acc + phase.totalDuration(), 0)
   }
+
+  totalSteps() {
+    return this.phases.reduce(
+      (acc, phase) =>
+        acc + phase.phase.steps.length * (phase.phase.repeats || 1),
+      0
+    )
+  }
 }
 
 export class BuilderView {
@@ -26,10 +34,9 @@ export class BuilderView {
         m('.container.is-fluid', [
           m('span.timer-name.title', this.builder.name),
           m('span', ' '),
-          m(
-            'span.phase-steps.subtitle',
-            prettySeconds(this.builder.totalDuration())
-          ),
+          m('span.subtitle', prettySeconds(this.builder.totalDuration())),
+          m('span', ' '),
+          m('span.subtitle', `${this.builder.totalSteps()} steps`),
         ]),
       ]),
       m(
