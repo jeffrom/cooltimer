@@ -4,7 +4,7 @@ import { BuilderView } from 'builder'
 import { RunnerView } from 'runner'
 import { Keys } from 'keys'
 
-import defaultPhases from 'timer_templates/workout1'
+import defaultPhases from 'timer_templates/workout2'
 
 class App {
   constructor() {
