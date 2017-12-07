@@ -184,6 +184,9 @@ export class RunnerView {
 
       inner = [
         m('h1.runner-label.title.is-size-1', runner.step.label),
+        m('figure.step-swatch.image.is-64x64', {
+          style: `background:${runner.step.color}`,
+        }),
         m('h2.runner-timeleft.subtitle.is-size-2', runner.timer.remaining()),
         m('.runner-controls', [
           m(
@@ -207,14 +210,6 @@ export class RunnerView {
 
     const progressLabel = `${runner.numSteps} / ${runner.totalSteps()}`
     let containerAttrs = {}
-
-    // if (runner.step.color) {
-    //   const rgb = hexToRGB(runner.step.color)
-    //   const inverted = invertColor(rgb)
-    //   const style = `background:${runner.step.color};color:${inverted};`
-
-    //   containerAttrs = { style: style }
-    // }
 
     return m('section.runner.hero.is-dark.is-fullheight', containerAttrs, [
       m('.hero-head', [

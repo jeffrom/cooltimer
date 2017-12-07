@@ -7,3 +7,15 @@ body,
 html {
   background-color: $grey-darker;
 }
+
+.phase {
+  padding: 10px 0;
+}
+
+.step {
+  margin-top: 4px;
+}
+
+.step-swatch {
+  display: inline-block;
+}
