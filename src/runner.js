@@ -30,7 +30,7 @@ class Runner {
 
   start() {
     if (this.step === PLACEHOLDER_STEP) {
-      this.step = this.phases[0].phase.steps[0]
+      this.step = this.phases.phases[0].steps[0]
       this.nextup = this.peek()
     }
     this.timer.start(this.step.time)
@@ -51,7 +51,7 @@ class Runner {
   }
 
   peek() {
-    const phase = this.phases[this.phaseIdx].phase
+    const phase = this.phases.phases[this.phaseIdx]
     let nextStep = this.stepIdx + 1
     let nextPhase = this.phaseIdx
     let repeats = this.repeats
@@ -63,16 +63,15 @@ class Runner {
       }
       nextStep = 0
     }
-    if (nextPhase > this.phases.length - 1) {
+    if (nextPhase > this.phases.phases.length - 1) {
       return { label: 'DONE!' }
     }
 
-    return this.phases[nextPhase].phase.steps[nextStep]
+    return this.phases.phases[nextPhase].steps[nextStep]
   }
 
   next() {
-    // TODO off by one, one less than we should have
-    const phase = this.phases[this.phaseIdx].phase
+    const phase = this.phases.phases[this.phaseIdx]
 
     this.timer.pause()
     this.timer.reset()
@@ -84,13 +83,13 @@ class Runner {
       }
       this.stepIdx = 0
     }
-    if (this.phaseIdx > this.phases.length - 1) {
+    if (this.phaseIdx > this.phases.phases.length - 1) {
       // ALL DONE
       this.stop()
       return null
     }
 
-    this.step = this.phases[this.phaseIdx].phase.steps[this.stepIdx]
+    this.step = this.phases.phases[this.phaseIdx].steps[this.stepIdx]
     this.timer.start(this.step.time)
 
     this.nextup = this.peek()
@@ -99,12 +98,17 @@ class Runner {
 }
 
 export class RunnerView {
-  constructor(phases) {
+  constructor(vnode) {
     this.runner = new Runner({
-      phases,
+      phases: vnode.attrs.phases,
       onTick: this.onTick.bind(this),
       onComplete: this.onComplete.bind(this),
     })
+    this.running = vnode.attrs.running
+
+    if (this.running) {
+      this.runner.start()
+    }
   }
 
   onTick() {
