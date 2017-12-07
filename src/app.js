@@ -98,39 +98,25 @@ const defaultPhases = {
 class App {
   constructor() {
     this.keys = new Keys()
-    this.keys.onSpace = this.onSpace.bind(this)
-    this.keys.onEnter = this.onEnter.bind(this)
-    this.keys.onEsc = this.onEsc.bind(this)
+    this.keys.handlers.app.onSpace = this.onSpace.bind(this)
+    this.keys.handlers.app.onEsc = this.onEsc.bind(this)
     this.reset()
   }
 
   reset() {
-    if (this.runner) {
-      this.runner.runner.stop()
-    }
     this.phases = defaultPhases
-    // this.builder = new BuilderView()
-    // this.runner = new RunnerView(this.builder.builder.phases)
     this.running = false
   }
 
   start() {
     this.running = true
-    // this.runner.runner.start()
   }
 
   onSpace(event) {
     event.preventDefault()
-    if (this.running) {
-      this.runner.runner.playPause()
-    } else {
+    if (!this.running) {
       this.start()
     }
-    m.redraw()
-  }
-
-  onEnter() {
-    this.runner.runner.next()
     m.redraw()
   }
 
@@ -146,6 +132,7 @@ class App {
       m(this.running ? RunnerView : BuilderView, {
         running: this.running,
         phases: this.phases,
+        keys: this.keys,
       }),
       m('section.app-controls.hero.is-dark', [
         m('.container.is-fluid', [

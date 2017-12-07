@@ -46,8 +46,10 @@ class Runner {
 
   stop() {
     this.finished = true
-    this.timer.pause()
-    this.timer.reset()
+    if (this.timer) {
+      this.timer.pause()
+      this.timer.reset()
+    }
   }
 
   peek() {
@@ -104,7 +106,12 @@ export class RunnerView {
       onTick: this.onTick.bind(this),
       onComplete: this.onComplete.bind(this),
     })
+    this.keys = vnode.attrs.keys
     this.running = vnode.attrs.running
+
+    this.keys.handlers.runner.onSpace = this.onSpace.bind(this)
+    this.keys.handlers.runner.onEnter = this.onEnter.bind(this)
+    this.keys.handlers.runner.onEsc = this.onEsc.bind(this)
 
     if (this.running) {
       this.runner.start()
@@ -125,6 +132,21 @@ export class RunnerView {
     beepDone()
 
     m.redraw()
+  }
+
+  onSpace(event) {
+    event.preventDefault()
+    this.runner.playPause()
+    m.redraw()
+  }
+
+  onEnter() {
+    this.runner.next()
+    m.redraw()
+  }
+
+  onEsc() {
+    this.runner.stop()
   }
 
   view() {

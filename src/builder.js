@@ -43,11 +43,11 @@ class Builder {
 export class BuilderView {
   constructor(vnode) {
     this.builder = new Builder(vnode.attrs.phases)
+    this.keys = vnode.attrs.keys
   }
 
   view() {
     return [
-      m('.step-controls', []),
       m('.phase-info.hero.is-dark', [
         m('.container.is-fluid', [
           m('span.timer-name.title', this.builder.name),
