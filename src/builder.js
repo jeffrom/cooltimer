@@ -1,33 +1,7 @@
 import m from 'mithril'
 
-import { PhaseView } from 'builder/phase'
+import { Phase, PhaseView } from 'builder/phase'
 import { prettySeconds } from 'helpers'
-
-class Phase {
-  constructor(phase) {
-    this.phase = phase
-  }
-
-  totalDuration() {
-    const phase = this.phase
-
-    return (
-      this.numRepeats() * phase.steps.reduce((acc, step) => acc + step.time, 0)
-    )
-  }
-
-  numRepeats() {
-    return this.phase.repeats || 1
-  }
-
-  numSteps() {
-    return this.phase.steps.length
-  }
-
-  totalSteps() {
-    return this.numSteps() * this.numRepeats()
-  }
-}
 
 class Builder {
   constructor(phases) {

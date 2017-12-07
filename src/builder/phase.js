@@ -3,6 +3,32 @@ import m from 'mithril'
 import { StepView } from 'builder/step'
 import { prettySeconds } from 'helpers'
 
+export class Phase {
+  constructor(phase) {
+    this.phase = phase
+  }
+
+  totalDuration() {
+    const phase = this.phase
+
+    return (
+      this.numRepeats() * phase.steps.reduce((acc, step) => acc + step.time, 0)
+    )
+  }
+
+  numRepeats() {
+    return this.phase.repeats || 1
+  }
+
+  numSteps() {
+    return this.phase.steps.length
+  }
+
+  totalSteps() {
+    return this.numSteps() * this.numRepeats()
+  }
+}
+
 export class PhaseView {
   constructor(vnode) {
     this.phase = vnode.attrs.phase
