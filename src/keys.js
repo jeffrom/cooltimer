@@ -14,9 +14,17 @@ export class Keys {
   }
 
   runHandlers(name, event) {
+    let broke
+
     Object.keys(this.handlers).map(module => {
+      if (broke) {
+        return
+      }
+
       if (this.handlers[module][name]) {
-        this.handlers[module][name](event)
+        if (this.handlers[module][name](event)) {
+          broke = true
+        }
       }
     })
   }

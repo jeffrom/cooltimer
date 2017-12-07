@@ -116,8 +116,11 @@ class App {
     event.preventDefault()
     if (!this.running) {
       this.start()
+      m.redraw()
+      return true
     }
     m.redraw()
+    return false
   }
 
   onEsc() {

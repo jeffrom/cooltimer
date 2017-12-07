@@ -109,6 +109,8 @@ export class RunnerView {
     this.keys = vnode.attrs.keys
     this.running = vnode.attrs.running
 
+    this.started = false
+
     this.keys.handlers.runner.onSpace = this.onSpace.bind(this)
     this.keys.handlers.runner.onEnter = this.onEnter.bind(this)
     this.keys.handlers.runner.onEsc = this.onEsc.bind(this)
