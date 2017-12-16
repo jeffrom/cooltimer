@@ -1,5 +1,6 @@
 import m from 'mithril'
 
+import { LoaderView } from 'loader'
 import { Phase, PhaseView } from 'builder/phase'
 import { prettySeconds } from 'helpers'
 
@@ -30,6 +31,7 @@ export class BuilderView {
 
   view() {
     return [
+      m(LoaderView),
       m('.phase-info.hero.is-dark', [
         m('.container.is-fluid', [
           m('span.timer-name.title', this.builder.name),
