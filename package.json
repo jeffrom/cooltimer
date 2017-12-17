@@ -8,7 +8,7 @@
     "dev": "webpack --progress --colors --watch --env dev",
     "test": "mocha --require babel-core/register --colors ./src/**/*.spec.js",
     "test:watch": "mocha --require babel-core/register --colors -w ./src/**/*.spec.js",
-    "start": "webpack-dev-server --content-base build/",
+    "start": "npm build && webpack-dev-server --content-base build/",
     "clean": "rm -rf build/*"
   },
   "repository": {

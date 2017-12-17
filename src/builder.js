@@ -23,26 +23,23 @@ class Builder {
 }
 
 export class BuilderView {
-  constructor(vnode) {
-    this.builder = new Builder(vnode.attrs.phases)
-    this.keys = vnode.attrs.keys
-  }
+  constructor() {}
 
-  view() {
+  view(vnode) {
+    const attrs = vnode.attrs
+    const builder = new Builder(attrs.saves[attrs.saveIdx])
+
     return [
       m('.phase-info.hero.is-dark', [
         m('.container.is-fluid', [
-          m('span.timer-name.title', this.builder.name),
+          m('span.timer-name.title', builder.name),
           m('span', ' '),
-          m('span.subtitle', prettySeconds(this.builder.totalDuration())),
+          m('span.subtitle', prettySeconds(builder.totalDuration())),
           m('span', ' '),
-          m('span.subtitle', `${this.builder.totalSteps()} steps`),
+          m('span.subtitle', `${builder.totalSteps()} steps`),
         ]),
       ]),
-      m(
-        '.phases',
-        this.builder.phases.map(phase => m(PhaseView, { phase: phase }))
-      ),
+      m('.phases', builder.phases.map(phase => m(PhaseView, { phase: phase }))),
     ]
   }
 }

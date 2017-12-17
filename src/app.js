@@ -4,7 +4,7 @@ import { BuilderView } from 'builder'
 import { RunnerView } from 'runner'
 import { Keys } from 'keys'
 
-import defaultPhases from 'timer_templates/workout2'
+const req = require.context('./timer_templates', true, /\.js$/)
 
 class App {
   constructor() {
@@ -15,7 +15,10 @@ class App {
   }
 
   reset() {
-    this.phases = defaultPhases
+    this.saves = req
+      .keys()
+      .map(mod => require('./timer_templates/' + mod.slice(2)).default)
+    this.saveIdx = 0
     this.running = false
   }
 
@@ -42,10 +45,32 @@ class App {
   }
 
   view() {
+    let loaderView = []
+
+    if (!this.running) {
+      loaderView = m('.timer-loader.hero.is-dark', [
+        m('.container.is-fluid', [
+          m(
+            'select.timer-loader-selector',
+            {
+              onchange: m.withAttr('value', val => {
+                this.saveIdx = val
+              }),
+            },
+            this.saves.map((save, i) => {
+              return m('option.timer-loader-option', { value: i }, save.name)
+            })
+          ),
+        ]),
+      ])
+    }
+
     return m('main', [
+      loaderView,
       m(this.running ? RunnerView : BuilderView, {
+        saveIdx: this.saveIdx,
         running: this.running,
-        phases: this.phases,
+        saves: this.saves,
         keys: this.keys,
       }),
       m('section.app-controls.hero.is-dark', [

@@ -30,13 +30,11 @@ export class Phase {
 }
 
 export class PhaseView {
-  constructor(vnode) {
-    this.phase = vnode.attrs.phase
-    this.steps = this.phase.phase.steps.map(step => m(StepView, { step: step }))
-  }
+  constructor() {}
 
-  view() {
-    const phase = this.phase
+  view(vnode) {
+    const phase = vnode.attrs.phase
+    const steps = phase.phase.steps.map(step => m(StepView, { step: step }))
 
     return m('section.phase.hero.is-dark', [
       m('.container.is-fluid', [
@@ -47,7 +45,7 @@ export class PhaseView {
         m('span.phase-num-steps', phase.numSteps()),
         m('span', ' '),
         m('span.duration', prettySeconds(phase.totalDuration())),
-        m('.steps', this.steps),
+        m('.steps', steps),
       ]),
     ])
   }

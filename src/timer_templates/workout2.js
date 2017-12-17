@@ -80,7 +80,7 @@ export default {
         { color: '#f44741', label: 'Rest', time: 10 },
         { color: '#6ef442', label: 'Back Plank', time: 30 },
         { color: '#f44741', label: 'Rest', time: 10 },
-        { color: '#6ef442', label: 'wall handstands', time: 45 },
+        { color: '#6ef442', label: 'windshield wipers (shoulders up)', time: 45 },
         { color: '#f44741', label: 'Rest', time: 30 },
       ],
     },

@@ -3,12 +3,10 @@ import m from 'mithril'
 import { hexToRGB, invertColor } from 'helpers'
 
 export class StepView {
-  constructor(vnode) {
-    this.step = vnode.attrs.step
-  }
+  constructor() {}
 
-  view() {
-    const step = this.step
+  view(vnode) {
+    const step = vnode.attrs.step
     let attrs = {}
 
     if (step.color) {

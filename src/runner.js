@@ -61,7 +61,7 @@ class Runner {
     let repeats = this.repeats
 
     if (nextStep > phase.steps.length - 1) {
-      if (++repeats > (phase.repeats || 0)) {
+      if (++repeats >= (phase.repeats || 0)) {
         nextPhase++
         repeats = 0
       }
@@ -122,7 +122,7 @@ class Runner {
 export class RunnerView {
   constructor(vnode) {
     this.runner = new Runner({
-      phases: vnode.attrs.phases,
+      phases: vnode.attrs.saves[vnode.attrs.saveIdx],
       onTick: this.onTick.bind(this),
       onComplete: this.onComplete.bind(this),
     })
@@ -171,7 +171,7 @@ export class RunnerView {
     this.runner.stop()
   }
 
-  view() {
+  view(vnode) {
     let inner
     const runner = this.runner
 
